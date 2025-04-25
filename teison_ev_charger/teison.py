@@ -87,10 +87,13 @@ HEADERS = {
 
 def post_login(user_name, pass_word):
     encrypted_password = encrypt_password(pass_word)
-    login_res = requests.post(
-        f'{TEISON_BASE_URL}api/v1/login/login',
-        json={"username": user_name, "password": encrypted_password}
-    )
+    url = f'{TEISON_BASE_URL}cpAm2/login'
+    params = {
+        "language": "en_us",
+        "username": user_name,
+        "password": encrypted_password
+    }
+    login_res = requests.get(url, params=params)
     return login_res.json()
 def get_device_list(local_token):
     headers = {'token': local_token}
