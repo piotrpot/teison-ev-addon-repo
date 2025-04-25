@@ -93,7 +93,7 @@ def post_login(user_name, pass_word):
         "username": user_name,
         "password": encrypted_password
     }
-    login_res = requests.get(url, params=params)
+    login_res = requests.post(url, params=params)
     return login_res.json()
 def get_device_list(local_token):
     headers = {'token': local_token}
