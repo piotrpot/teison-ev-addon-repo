@@ -126,7 +126,7 @@ def get_rates(local_token):
 def login_and_get_device():
     global token, device_id
     login_data = post_login(username, password)
-    token = login_data['data']['token']
+    token = login_data['token']
     
     device_data = get_device_list(token).get('bizData', {})
     device_list = device_data.get('deviceList', [])
