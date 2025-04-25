@@ -86,15 +86,11 @@ HEADERS = {
 }
 
 def post_login(user_name, pass_word):
-    encrypted_password = encrypt_password(pass_word)
-    url = f'{TEISON_BASE_URL}cpAm2/login'
-    params = {
-        "language": "en_us",
-        "username": user_name,
-        "password": encrypted_password
-    }
-    login_res = requests.post(url, params=params)
-    return login_res.json()
+    url = f'{TEISON_BASE_URL}cpAm2/login?language=en_us&username={user_name}&password={pass_word}'
+    response = requests.post(url)
+    response_data = response.json()
+    token = response_data.get('token')
+    return token
 def get_device_list(local_token):
     headers = {'token': local_token}
     device_res = requests.get(
@@ -125,8 +121,7 @@ def get_rates(local_token):
     return res.json()
 def login_and_get_device():
     global token, device_id
-    login_data = post_login(username, password)
-    token = login_data['token']
+    token = post_login(username, password)
     
     device_data = get_device_list(token).get('bizData', {})
     device_list = device_data.get('deviceList', [])
