@@ -186,7 +186,6 @@ def mqtt_publish_status():
             power = status.get("bizData", {}).get("power")  # power in w
             debug_print("accEnergy:", power)
 
-
             getCpConfig = get_cp_config(token,device_id)
             maxCurrent = getCpConfig.get("bizData", {}).get("maxCurrent")
 
@@ -265,8 +264,6 @@ def mqtt_publish_status():
                 "icon": "mdi:current-ac"
             })
             client.publish("teison/charger/current/state", maxCurrent, retain=True)
-            client.publish("teison/power_rate/state", rates, retain=True)
-            client.publish("teison/currency/state", currency, retain=True)
             # client.publish("teison/evcharger/status", json.dumps(status))
         time.sleep(pull_interval)
 def ms_to_hms(ms_string):
