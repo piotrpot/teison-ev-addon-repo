@@ -190,11 +190,6 @@ def mqtt_publish_status():
             getCpConfig = get_cp_config(token,device_id)
             maxCurrent = getCpConfig.get("bizData", {}).get("maxCurrent")
 
-
-            getRates = get_rates(token)
-            rates = getRates.get("bizData", {}).get("rates")
-            currency = getRates.get("bizData", {}).get("currency")
-
             if connStatus == 0:
                 client.publish("teison/charger/state", "stop")
             else:
@@ -207,7 +202,7 @@ def mqtt_publish_status():
             })
 
             post_sensor("ev_charger_power", power, {
-                "unit_of_measurement": "w",
+                "unit_of_measurement": "W",
                 "device_class": "power",
                 "friendly_name": "EV Charger Power",
                 "icon": "mdi:flash"
@@ -411,18 +406,6 @@ client.publish(
 )
 
 client.publish(
-    "homeassistant/select/teison_currency/config",
-    json.dumps({
-        "name": "Teison Currency",
-        "unique_id": "teison_currency_selector",
-        "command_topic": "teison/currency/set",
-        "state_topic": "teison/currency/state",
-        "options": currency_list,
-        "retain": True
-    }),
-    retain=True
-)
-client.publish(
     "homeassistant/number/teison_power_limit/config",
     json.dumps({
         "name": "Teison Power Rate",
@@ -432,7 +415,7 @@ client.publish(
         "min": 0.0,
         "max": 9999999.0,
         "step": 0.01,
-        "unit_of_measurement": "kwh",
+        "unit_of_measurement": "kWh",
         "mode": "box",
         "retain": True
     }),
