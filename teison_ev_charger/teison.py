@@ -12,7 +12,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 # Config
 HA_BASE_URL = "http://homeassistant.local:8123/api/states/"
-TEISON_BASE_URL = "https://cloud.teison.com/"
+TEISON_BASE_URL = "https://teison-m3.x-cheng.com/"
 
 
 # Public key for password encryption
@@ -122,13 +122,25 @@ def get_rates(local_token):
     return res.json()
 def login_and_get_device():
     global token, device_id
-    login_data = post_login(username,password)
+    login_data = post_login(username, password)
     token = login_data['data']['token']
-    device_list = get_device_list(token).get('bizData', [])
-    device_list = device_list['deviceList']
+    
+    device_data = get_device_list(token).get('bizData', {})
+    device_list = device_data.get('deviceList', [])
+
+    if not device_list:
+        debug_print("No devices found.")
+        return
+
+    debug_print(f"Found {len(device_list)} devices:")
+    for idx, device in enumerate(device_list):
+        debug_print(f"  [{idx}] ID: {device.get('id')}, Name: {device.get('name')}, Type: {device.get('type')}")
+
     if len(device_list) > device_index:
         device_id = device_list[device_index]['id']
         debug_print(f"Using device ID: {device_id}")
+    else:
+        debug_print(f"Device index {device_index} is out of range. Only {len(device_list)} devices available.")
 
 def post_sensor(sensor_id, state, attributes):
     try:
